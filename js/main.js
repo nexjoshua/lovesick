@@ -761,16 +761,19 @@ function initForms() {
         submitted_at: new Date().toISOString()
       };
 
+      // Pick the webhook for this specific form (falls back to ghlWebhookUrl)
+      const webhookUrl = (CONFIG.ghlWebhooks && CONFIG.ghlWebhooks[form.dataset.ghl]) || CONFIG.ghlWebhookUrl;
+
       try {
-        if (CONFIG.ghlWebhookUrl) {
-          const res = await fetch(CONFIG.ghlWebhookUrl, {
+        if (webhookUrl) {
+          const res = await fetch(webhookUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           });
-          if (!res.ok) throw new Error("Network response was not ok");
+          if (!res.ok) throw new Error(`Webhook responded with ${res.status}`);
         } else {
-          console.info("[Lovesick] Demo mode — add CONFIG.ghlWebhookUrl. Payload:", payload);
+          console.info(`[Lovesick] No webhook set for "${form.dataset.ghl}". Payload:`, payload);
           await new Promise(r => setTimeout(r, 700));
         }
         if (CONFIG.thankYouRedirect) { location.href = CONFIG.thankYouRedirect; return; }
@@ -783,7 +786,7 @@ function initForms() {
           success.focus();
         }
       } catch (err) {
-        console.error(err);
+        console.error("[Lovesick] Form submit failed:", err);
         alert("Sorry — something went wrong sending your enquiry. Please try again or email macy@lovesickmedia.com.au.");
       } finally {
         btn.removeAttribute("aria-busy");
