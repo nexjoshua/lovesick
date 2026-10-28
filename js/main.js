@@ -9,23 +9,22 @@
 
 /* ---------- CONFIG ------------------------------------------------------- */
 const CONFIG = {
-  /* Paste the GHL Inbound Webhook URL here (Automation → Workflow →
-     Trigger: "Inbound Webhook"). Leave empty to run the forms in demo mode. */
-  ghlWebhookUrl: "",
+  /* GHL Inbound Webhooks, one per form.
+     Each key must match the form's data-ghl attribute exactly (note the en dash "–"). */
+  ghlWebhooks: {
+    "Home – Check your date": "https://services.leadconnectorhq.com/hooks/t9buh8VifOKEOEwnYhQF/webhook-trigger/f16954e5-d2c2-4a06-9e33-26c8b5c71d3b",
+    "Contact – Book now":     "https://services.leadconnectorhq.com/hooks/t9buh8VifOKEOEwnYhQF/webhook-trigger/b09dc17f-ccbd-49d0-8547-d26439e3fc66"
+  },
+  ghlWebhookUrl: "", // fallback for any future form not listed above
   thankYouRedirect: "", // optional, e.g. "thank-you.html"
 
-  /* OPTIONAL — Gemini/Veo image sequence for the hero.
-     Export your video to numbered frames (see README) and set count > 0.
-     Files are read as: path + zero-padded index + ext
-     e.g. assets/frames/camera_001.webp … camera_120.webp
-     When count is 0 the real-time 3D camera is used instead. */
   heroFrames: {
     count: 0,
     path: "assets/frames/camera_",
     pad: 3,
     ext: ".webp",
     fps: 30,
-    loopFrom: 0 // frame to loop back to after the intro (0 = hold the last frame)
+    loopFrom: 0
   }
 };
 
